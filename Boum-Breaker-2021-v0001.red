@@ -13,8 +13,8 @@ Red [
 ]
 
 
-son?: true
-;son?: false
+;son?: true
+son?: false
 BILLES_RESTANTES: 0
 media: [%bass.red %bass.reds]
 ;-- download them if not exists...
@@ -25,7 +25,7 @@ foreach file media [
 		write/binary file read/binary rejoin [url %?raw=true]
 	]
 ]
-;#include %bass.red
+;#include %bass.red   ;;uncomment and compile to play the game with sounds : )
 if son? [
 media: [%./wav/boink.wav %./wav/ow.wav %./wav/pickup.wav %./wav/loupe.wav %./wav/pickup2.wav %./wav/tir1.wav %./wav/tir2.wav %./wav/loupe.wav %./wav/loupe2.wav %./wav/sonfin1.wav %./wav/clap.wav]
 bass/init 
