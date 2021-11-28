@@ -11,11 +11,11 @@
  
 ### Moves
 You can only play with mouse (I think the gameplay is better like that).
-Right clik: launch game.
-Left click: shoot (two types of weapons are available).
-Escape: quit game.
+#Right clik: launch game.
+#Left click: shoot (two types of weapons are available).
+#Escape: quit game.
 
 ### Gameplay
-You can play with one ore five balls in the same time.
+You can play with on ore five balls in the same time.
 
 ##Please feel free to test and enjoy :)
