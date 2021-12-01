@@ -13,8 +13,8 @@ Red [
 ]
 
 
-;son?: true
-son?: false
+son?: true
+;son?: false
 BILLES_RESTANTES: 0
 media: [%bass.red %bass.reds]
 ;-- download them if not exists...
@@ -25,10 +25,19 @@ foreach file media [
 		write/binary file read/binary rejoin [url %?raw=true]
 	]
 ]
-;#include %bass.red   ;;uncomment and compile to play the game with sounds : )
+#include %bass.red
 if son? [
-media: [%./wav/boink.wav %./wav/ow.wav %./wav/pickup.wav %./wav/loupe.wav %./wav/pickup2.wav %./wav/tir1.wav %./wav/tir2.wav %./wav/loupe.wav %./wav/loupe2.wav %./wav/sonfin1.wav %./wav/clap.wav]
-bass/init 
+bass/init
+bass/do [
+music1: load %feroness_-_sun.mod   
+music2: load %abyss_5.mod  
+son-rebond: load %./wav/boink.wav
+son-ow: load %./wav/ow.wav
+son-pickup2: load %./wav/pickup2.wav
+son-tir1: load %./wav/tir1.wav
+son-loupe: load %./wav/loupe.wav
+son-loupe2: load %./wav/loupe2.wav
+]
 ]
 end?: false
 begin?: true
@@ -334,9 +343,8 @@ poke titre/draw (length? titre/draw) "2"
 if son? [
 bass/free
 bass/init
-bass/do [
-	music:   load %abyss_5.mod  
-	channel: play music [volume: 0.8]     
+bass/do [	
+	channel: play music2 [volume: 0.8]     
 ]
 ]
 ]
@@ -397,14 +405,13 @@ if son? [
 bass/free
 bass/init
 bass/do [
-	music:   load %feroness_-_sun.mod  
-	channel: play music [volume: 1.0] 
+	channel: play music1 [volume: 1.0] 
 ]
 ]
 ]
 ddot: does [doubledot?: true]
 checkbrik: DOES [brik: brik - 1 if brik = 0 [
-pause_game if son? [bass/do compose/deep [sound: load (media/11) play sound]]
+pause_game if son? [bass/do [play son-rebond]]
 BILLES_RESTANTES: 0 
 either bille1_alive? [ball1: 1][ball1: 0]
 either bille2_alive? [ball2: 1][ball2: 0]
@@ -484,7 +491,7 @@ append fen2  [
 load1: does [tir2?: false if not tir1? [tir1?: true ] color_weapon: red poke raquette/draw 17 color_weapon poke raquette/draw 22 color_weapon poke raquette/draw 27 color_weapon]
 load2: does [tir1?: false if not tir2? [tir2?: true ] color_weapon: cyan poke raquette/draw 17 color_weapon poke raquette/draw 22 color_weapon poke raquette/draw 27 color_weapon]
 add_ball: does [
-if son? [bass/do compose/deep [sound: load (media/9) play sound]]
+if son? [bass/do [play son-loupe2]]
     either not bille1_alive? [bille1_alive?: true bille1/offset: ((size_scrn / 2) + 0x-100) pairP: 0x4][
         either not bille2_alive? [bille2_alive?: true bille2/offset: ((size_scrn / 2) + 0x-100) pairP2: 0x4][
             either not bille3_alive? [bille3_alive?: true bille3/offset: ((size_scrn / 2) + 0x-100) pairP3: 0x4][
@@ -633,13 +640,13 @@ smaller: does [
         raquette/offset/x: raquette/offset/x + 10
         ]
 ]
-birth: does [if son? [bass/do compose/deep [sound: load (media/5) play sound]] life: life + 1 poke titre/draw 18 (form life)]
-death: does [if son? [bass/do compose/deep [sound: load (media/2) play sound]] life: life - 1 poke titre/draw 18 (form life) either life = 0 [if son? [bass/do compose/deep [sound: load (media/10) play sound]] alert "GAME OVER" if son? [bass/free] quit][clear_bonus clear_wpn1 init_game pause_game]]
+birth: does [if son? [bass/do [play son-pickup2]] life: life + 1 poke titre/draw 18 (form life)]
+death: does [if son? [bass/do [play son-ow]] life: life - 1 poke titre/draw 18 (form life) either life = 0 [if son? [bass/do [play son-rebond]] alert "GAME OVER" if son? [bass/free] quit][clear_bonus clear_wpn1 init_game pause_game]]
 death2: does [bille1_alive?: false bille2_alive?: false bille3_alive?: false bille4_alive?: false bille5_alive?: false bille1/offset: -10x0 bille2/offset: -10x0 bille3/offset: -10x0 bille4/offset: -10x0 bille5/offset: -10x0 death]
 death3: does [bille1_alive?: true bille1/offset: ((size_scrn / 2) + 0x-100) pairP: 0x4 bille2_alive?: false bille3_alive?: false bille4_alive?: false bille5_alive?: false bille2/offset: -10x0 bille3/offset: -10x0 bille4/offset: -10x0 bille5/offset: -10x0]
-faster: does [if son? [bass/do compose/deep [sound: load (media/5) play sound]] if not equal? v2 vmax [v2: v2 + 0.05 poke titre/draw 10  form round/to v2 0.01]]
-slower: does [if son? [bass/do compose/deep [sound: load (media/5) play sound]] if not equal? v2 vmin [v2: v2 - 0.05 poke titre/draw 10  form round/to v2 0.01]]
-salary: does [if son? [bass/do compose/deep [sound: load (media/5) play sound]] score: score + 500 poke titre/draw 34 (form score)]
+faster: does [if son? [bass/do [play son-pickup2]] if not equal? v2 vmax [v2: v2 + 0.05 poke titre/draw 10  form round/to v2 0.01]]
+slower: does [if son? [bass/do [play son-pickup2]] if not equal? v2 vmin [v2: v2 - 0.05 poke titre/draw 10  form round/to v2 0.01]]
+salary: does [if son? [bass/do [play son-pickup2]] score: score + 500 poke titre/draw 34 (form score)]
 maj_score: does [score: score + 50 poke titre/draw 34 (form score)]
 but1: does [
 wpn1/offset: -10x10
@@ -712,7 +719,7 @@ checkbrik
 ]
 
 rebond_1: does [
-if son? [bass/do compose/deep [sound: load (media/1) play sound]]
+if son? [bass/do [play son-rebond]]
 		either all [(cond1 == false) (pairp/x > 0)(pairp/y > 0)] [set 'cond1 none set 'cond2 none pairp: pairp * 1x-1 temp: pick lay_brique/draw p poke lay_brique/draw p (temp * 1.2)  poke listeVie i ((pick listevie i) - 1) maj_score if ((to integer! pick listevie i) = 0) [temp: reduce to-word rejoin ["b" i] temp/offset: (as-pair (((pick listeAbs i) + ((pick listeLong i) / 2)) - (temp/size/x / 2)) (((pick listeOrd i) + ((pick listeLarg i) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p + 2) -10x0 poke lay_brique/draw (p + 3) -10x0 checkbrik]][
            either all [(cond1 == true)(pairp/x > 0)(pairp/y > 0)] [set 'cond1 none set 'cond2 none pairp: pairp * -1x1 temp: pick lay_brique/draw p poke lay_brique/draw p (temp * 1.2)  poke listeVie i ((pick listevie i) - 1) maj_score if ((to integer! pick listevie i) = 0) [temp: reduce to-word rejoin ["b" i] temp/offset: (as-pair (((pick listeAbs i) + ((pick listeLong i) / 2)) - (temp/size/x / 2)) (((pick listeOrd i) + ((pick listeLarg i) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p + 2) -10x0 poke lay_brique/draw (p + 3) -10x0 checkbrik]][
 			either all [(cond2 == true) (pairp/x < 0)(pairp/y < 0)] [set 'cond1 none set 'cond2 none pairp: pairp * -1x1 temp: pick lay_brique/draw p poke lay_brique/draw p (temp * 1.2)  poke listeVie i ((pick listevie i) - 1) maj_score  if ((to integer! pick listevie i) = 0) [temp: reduce to-word rejoin ["b" i] temp/offset: (as-pair (((pick listeAbs i) + ((pick listeLong i) / 2)) - (temp/size/x / 2)) (((pick listeOrd i) + ((pick listeLarg i) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p + 2) -10x0 poke lay_brique/draw (p + 3) -10x0 checkbrik]][
@@ -731,7 +738,7 @@ if son? [bass/do compose/deep [sound: load (media/1) play sound]]
 	]
 ]
 rebond_2: does [
-if son? [bass/do compose/deep [sound: load (media/1) play sound]]
+if son? [bass/do [play son-rebond]]
 		either all [(cond12 == false) (pairp2/x > 0)(pairp2/y > 0)] [set 'cond12 none set 'cond22 none pairp2: pairp2 * 1x-1 temp: pick lay_brique/draw p2 poke lay_brique/draw p2 (temp * 1.2)  poke listeVie j ((pick listevie j) - 1) maj_score if ((to integer! pick listevie j) = 0) [temp: reduce to-word rejoin ["b" j] temp/offset: (as-pair (((pick listeAbs j) + ((pick listeLong j) / 2)) - (temp/size/x / 2)) (((pick listeOrd j) + ((pick listeLarg j) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p2 + 2) -10x0 poke lay_brique/draw (p2 + 3) -10x0 checkbrik]][
            either all [(cond12 == true)(pairp2/x > 0)(pairp2/y > 0)] [set 'cond12 none set 'cond22 none pairp2: pairp2 * -1x1 temp: pick lay_brique/draw p2 poke lay_brique/draw p2 (temp * 1.2)  poke listeVie j ((pick listevie j) - 1) maj_score if ((to integer! pick listevie j) = 0) [temp: reduce to-word rejoin ["b" j] temp/offset: (as-pair (((pick listeAbs j) + ((pick listeLong j) / 2)) - (temp/size/x / 2)) (((pick listeOrd j) + ((pick listeLarg j) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p2 + 2) -10x0 poke lay_brique/draw (p2 + 3) -10x0 checkbrik]][
 			either all [(cond22 == true) (pairp2/x < 0)(pairp2/y < 0)] [set 'cond12 none set 'cond22 none pairp2: pairp2 * -1x1 temp: pick lay_brique/draw p2 poke lay_brique/draw p2 (temp * 1.2)  poke listeVie j ((pick listevie j) - 1) maj_score  if ((to integer! pick listevie j) = 0) [temp: reduce to-word rejoin ["b" j] temp/offset: (as-pair (((pick listeAbs j) + ((pick listeLong j) / 2)) - (temp/size/x / 2)) (((pick listeOrd j) + ((pick listeLarg j) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p2 + 2) -10x0 poke lay_brique/draw (p2 + 3) -10x0 checkbrik]][
@@ -750,7 +757,7 @@ if son? [bass/do compose/deep [sound: load (media/1) play sound]]
 	]
 ]
 rebond_3: does [
-if son? [bass/do compose/deep [sound: load (media/1) play sound]]
+if son? [bass/do [play son-rebond]]
 		either all [(cond13 == false) (pairp3/x > 0)(pairp3/y > 0)] [set 'cond13 none set 'cond23 none pairp3: pairp3 * 1x-1 temp: pick lay_brique/draw p3 poke lay_brique/draw p3 (temp * 1.2)  poke listeVie k ((pick listevie k) - 1) maj_score if ((to integer! pick listevie k) = 0) [temp: reduce to-word rejoin ["b" k] temp/offset: (as-pair (((pick listeAbs k) + ((pick listeLong k) / 2)) - (temp/size/x / 2)) (((pick listeOrd k) + ((pick listeLarg k) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p3 + 2) -10x0 poke lay_brique/draw (p3 + 3) -10x0 checkbrik]][
            either all [(cond13 == true)(pairp3/x > 0)(pairp3/y > 0)] [set 'cond13 none set 'cond23 none pairp3: pairp3 * -1x1 temp: pick lay_brique/draw p3 poke lay_brique/draw p3 (temp * 1.2)  poke listeVie k ((pick listevie k) - 1) maj_score if ((to integer! pick listevie k) = 0) [temp: reduce to-word rejoin ["b" k] temp/offset: (as-pair (((pick listeAbs k) + ((pick listeLong k) / 2)) - (temp/size/x / 2)) (((pick listeOrd k) + ((pick listeLarg k) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p3 + 2) -10x0 poke lay_brique/draw (p3 + 3) -10x0 checkbrik]][
 			either all [(cond23 == true) (pairp3/x < 0)(pairp3/y < 0)] [set 'cond13 none set 'cond23 none pairp3: pairp3 * -1x1 temp: pick lay_brique/draw p3 poke lay_brique/draw p3 (temp * 1.2)  poke listeVie k ((pick listevie k) - 1) maj_score  if ((to integer! pick listevie k) = 0) [temp: reduce to-word rejoin ["b" k] temp/offset: (as-pair (((pick listeAbs k) + ((pick listeLong k) / 2)) - (temp/size/x / 2)) (((pick listeOrd k) + ((pick listeLarg k) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p3 + 2) -10x0 poke lay_brique/draw (p3 + 3) -10x0 checkbrik]][
@@ -769,7 +776,7 @@ if son? [bass/do compose/deep [sound: load (media/1) play sound]]
 	]
 ]
 rebond_4: does [
-if son? [bass/do compose/deep [sound: load (media/1) play sound]]
+if son? [bass/do [play son-rebond]]
 		either all [(cond14 == false) (pairp4/x > 0)(pairp4/y > 0)] [set 'cond14 none set 'cond24 none pairp4: pairp4 * 1x-1 temp: pick lay_brique/draw p4 poke lay_brique/draw p4 (temp * 1.2)  poke listeVie l ((pick listevie l) - 1) maj_score if ((to integer! pick listevie l) = 0) [temp: reduce to-word rejoin ["b" l] temp/offset: (as-pair (((pick listeAbs l) + ((pick listeLong l) / 2)) - (temp/size/x / 2)) (((pick listeOrd l) + ((pick listeLarg l) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p4 + 2) -10x0 poke lay_brique/draw (p4 + 3) -10x0 checkbrik]][
            either all [(cond14 == true)(pairp4/x > 0)(pairp4/y > 0)] [set 'cond14 none set 'cond24 none pairp4: pairp4 * -1x1 temp: pick lay_brique/draw p4 poke lay_brique/draw p4 (temp * 1.2)  poke listeVie l ((pick listevie l) - 1) maj_score if ((to integer! pick listevie l) = 0) [temp: reduce to-word rejoin ["b" l] temp/offset: (as-pair (((pick listeAbs l) + ((pick listeLong l) / 2)) - (temp/size/x / 2)) (((pick listeOrd l) + ((pick listeLarg l) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p4 + 2) -10x0 poke lay_brique/draw (p4 + 3) -10x0 checkbrik]][
 			either all [(cond24 == true) (pairp4/x < 0)(pairp4/y < 0)] [set 'cond14 none set 'cond24 none pairp4: pairp4 * -1x1 temp: pick lay_brique/draw p4 poke lay_brique/draw p4 (temp * 1.2)  poke listeVie l ((pick listevie l) - 1) maj_score  if ((to integer! pick listevie l) = 0) [temp: reduce to-word rejoin ["b" l] temp/offset: (as-pair (((pick listeAbs l) + ((pick listeLong l) / 2)) - (temp/size/x / 2)) (((pick listeOrd l) + ((pick listeLarg l) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p4 + 2) -10x0 poke lay_brique/draw (p4 + 3) -10x0 checkbrik]][
@@ -788,7 +795,7 @@ if son? [bass/do compose/deep [sound: load (media/1) play sound]]
 	]
 ]
 rebond_5: does [
-if son? [bass/do compose/deep [sound: load (media/1) play sound]]
+if son? [bass/do [play son-rebond]]
 		either all [(cond15 == false) (pairp5/x > 0)(pairp5/y > 0)] [set 'cond15 none set 'cond25 none pairp5: pairp5 * 1x-1 temp: pick lay_brique/draw p5 poke lay_brique/draw p5 (temp * 1.2)  poke listeVie m ((pick listevie m) - 1) maj_score if ((to integer! pick listevie m) = 0) [temp: reduce to-word rejoin ["b" m] temp/offset: (as-pair (((pick listeAbs m) + ((pick listeLong m) / 2)) - (temp/size/x / 2)) (((pick listeOrd m) + ((pick listeLarg m) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p5 + 2) -10x0 poke lay_brique/draw (p5 + 3) -10x0 checkbrik]][
            either all [(cond15 == true)(pairp5/x > 0)(pairp5/y > 0)] [set 'cond15 none set 'cond25 none pairp5: pairp5 * -1x1 temp: pick lay_brique/draw p5 poke lay_brique/draw p5 (temp * 1.2)  poke listeVie m ((pick listevie m) - 1) maj_score if ((to integer! pick listevie m) = 0) [temp: reduce to-word rejoin ["b" m] temp/offset: (as-pair (((pick listeAbs m) + ((pick listeLong m) / 2)) - (temp/size/x / 2)) (((pick listeOrd m) + ((pick listeLarg m) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p5 + 2) -10x0 poke lay_brique/draw (p5 + 3) -10x0 checkbrik]][
 			either all [(cond25 == true) (pairp5/x < 0)(pairp5/y < 0)] [set 'cond15 none set 'cond25 none pairp5: pairp5 * -1x1 temp: pick lay_brique/draw p5 poke lay_brique/draw p5 (temp * 1.2)  poke listeVie m ((pick listevie m) - 1) maj_score  if ((to integer! pick listevie m) = 0) [temp: reduce to-word rejoin ["b" m] temp/offset: (as-pair (((pick listeAbs m) + ((pick listeLong m) / 2)) - (temp/size/x / 2)) (((pick listeOrd m) + ((pick listeLarg m) / 2)) - (temp/size/y / 2)))poke lay_brique/draw (p5 + 2) -10x0 poke lay_brique/draw (p5 + 3) -10x0 checkbrik]][
@@ -893,22 +900,22 @@ coll_raq: does [
             (posbox/x <= raquette/offset/x )
             ]
 			[
-            if face/text = "1" [pairp: -3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]] ]
-            if face/text = "2" [pairp2: -3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: -3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: -3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: -3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+            if face/text = "1" [pairp: -3x-4  if son? [bass/do [play son-rebond]] ]
+            if face/text = "2" [pairp2: -3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: -3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: -3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: -3x-4  if son? [bass/do [play son-rebond]]]
 			 ]
         if all [
             (posbox/x > raquette/offset/x)
             (posbox/x < (raquette/offset/x + (longRaq / 4) - (sizebox/x / 2)))
             ]
 			[
-  			if face/text = "1" [pairp: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "2" [pairp2: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+  			if face/text = "1" [pairp: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "2" [pairp2: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: -2x-4  if son? [bass/do [play son-rebond]]]
            
              ]
         if all [
@@ -916,52 +923,52 @@ coll_raq: does [
             (posbox/x < (raquette/offset/x + (longRaq / 2) - (sizebox/x / 2)))
             ]
 			[
-  			if face/text = "1" [pairp: -1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "2" [pairp2: -1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: -1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: -1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: -1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+  			if face/text = "1" [pairp: -1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "2" [pairp2: -1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: -1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: -1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: -1x-4  if son? [bass/do [play son-rebond]]]
              ]
         if (posbox/x = (raquette/offset/x + (longRaq / 2) - (sizebox/x / 2)))
             [
-  			if face/text = "1" [pairp: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "2" [pairp2: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: -2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+  			if face/text = "1" [pairp: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "2" [pairp2: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: -2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: -2x-4  if son? [bass/do [play son-rebond]]]
              ]
         if all [
             (posbox/x > (raquette/offset/x + (longRaq / 2) - (sizebox/x / 2)))
             (posbox/x < (raquette/offset/x + ((longRaq * 3) / 4) - (sizebox/x / 2)))
             ]
 			[
-  			if face/text = "1" [pairp: 1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "2" [pairp2: 1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: 1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: 1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: 1x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+  			if face/text = "1" [pairp: 1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "2" [pairp2: 1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: 1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: 1x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: 1x-4  if son? [bass/do [play son-rebond]]]
               ]
         if all [
             (posbox/x >= (raquette/offset/x + ((longRaq * 3) / 4) - (sizebox/x / 2)))
             (posbox/x < (raquette/offset/x + longRaq - (sizebox/x / 2)))
             ]
 			[
-  			if face/text = "1" [pairp: 2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "2" [pairp2: 2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: 2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: 2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: 2x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+  			if face/text = "1" [pairp: 2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "2" [pairp2: 2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: 2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: 2x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: 2x-4  if son? [bass/do [play son-rebond]]]
             ]
         if all [
             (posbox/x <= (raquette/offset/x + longRaq ))
             (posbox/x >= (raquette/offset/x + longRaq - (sizebox/x / 2)))
             ]
 			[
-  			if face/text = "1" [pairp: 3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "2" [pairp2: 3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "3" [pairp3: 3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "4" [pairp4: 3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
-            if face/text = "5" [pairp5: 3x-4  if son? [bass/do compose/deep [sound: load (media/1) play sound]]]
+  			if face/text = "1" [pairp: 3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "2" [pairp2: 3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "3" [pairp3: 3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "4" [pairp4: 3x-4  if son? [bass/do [play son-rebond]]]
+            if face/text = "5" [pairp5: 3x-4  if son? [bass/do [play son-rebond]]]
              ]
 ]		
 ]
@@ -1147,7 +1154,7 @@ if all [weapon1? not touche1?][
             (pick listeVie n)  <> 0
                 ][
             touche1?: true
-            if son? [bass/do compose/deep [sound: load (media/6) play sound]]
+            if son? [bass/do [play son-tir1]]
             either n = 1 [p6: 2][p6: 2 + ((n - 1) * 5)]
             either tir1? [but1][but2]
             touche1?: false
@@ -1168,7 +1175,7 @@ if all [weapon12? not touche12?][
             (pick listeVie n12)  <> 0
                 ][
             touche12?: true
-            if son? [bass/do compose/deep [sound: load (media/6) play sound]]
+            if son? [bass/do [play son-tir1]]
             either n12 = 1 [p62: 2][p62: 2 + ((n12 - 1) * 5)]
             either tir1? [but12][but22]
             touche12?: false
@@ -1189,7 +1196,7 @@ if all [weapon13? not touche13?][
             (pick listeVie n13)  <> 0
                 ][
             touche13?: true
-            if son? [bass/do compose/deep [sound: load (media/6) play sound]]
+            if son? [bass/do [play son-tir1]]
             either n13 = 1 [p63: 2][p63: 2 + ((n13 - 1) * 5)]
             either tir1? [but13][but23]
             touche13?: false
@@ -1210,7 +1217,7 @@ repeat i 100 [
         (test/offset/y <= (raquette/offset/y + epraq))		
                 ][
        test/offset: -50x0 coll_bonus
-                ][if test/offset/y >= lay_brique/size/y [if son? [bass/do compose/deep [sound: load (media/8) play sound]] bonus_loupes: bonus_loupes + 1 test/offset: -50x0]]
+                ][if test/offset/y >= lay_brique/size/y [if son? [bass/do [play son-loupe]] bonus_loupes: bonus_loupes + 1 test/offset: -50x0]]
     ]
 ]
 if pairp/y > 0 [
@@ -1395,8 +1402,54 @@ append fen [
                         on-alt-down [pause?: false either pause? [text_pause/offset: 500x300 bille1/rate: none bille2/rate: none bille3/rate: none bille4/rate: none bille5/rate: none titre/rate: none][text_pause/offset: -100x0 bille1/rate: 25 bille2/rate: 25 bille3/rate: 25 bille4/rate: 25 bille5/rate: 25 titre/rate: 25 if begin? [tempsNiveau: to-time 0 begin?: false]]]
     on-key  [
                switch event/key [
+                        #"1" [tir2?: false tir1?: true triple?: true double?: false]
+                        #"2" [tir1?: false tir2?: true triple?: true double?: false]
                         #"^M" [pause?: false either pause? [text_pause/offset: 500x300 bille1/rate: none bille2/rate: none bille3/rate: none bille4/rate: none bille5/rate: none titre/rate: none][text_pause/offset: -100x0 bille1/rate: 25 bille2/rate: 25 bille3/rate: 25 bille4/rate: 25 bille5/rate: 25 titre/rate: 25 if begin? [tempsNiveau: to-time 0 begin?: false]]]
                         #"^[" [pause_game view layout [	title "Boum Breaker 2021" backdrop snow across text 280x100 font-size 20 "Voulez vous quitter Boum Breaker 2021?" bold  return text 65 button "Oui" [if son? [bass/free] quit] text 20 button "Non" [unview] at 20x100 image %./img/Boum_Breaker.gif]]
+                        up [
+                        if tir1? [
+                        poke wpn1/draw 2 red poke wpn12/draw 2 red poke wpn13/draw 2 red
+                        if all [ not double? not triple?] [
+                        if not weapon1? [wpn1/offset: raquette/offset + (as-pair ((raquette/size/x / 2) - (wpn1/size/x / 2)) 0)]
+                        if not touche1? [weapon1?: true]
+                                        ]
+                        if all  [not triple? double?] [
+                        if not weapon1? [wpn1/offset: raquette/offset + (as-pair ((raquette/size/x / 3) - (wpn1/size/x / 2)) 0)]
+                        if not weapon12? [wpn12/offset: raquette/offset + (as-pair (((raquette/size/x * 2) / 3) - (wpn12/size/x / 2)) 0)]
+                        if not touche1? [weapon1?: true]
+                        if not touche12? [weapon12?: true]
+                            ]
+                        if all  [triple? not double?] [
+                        if not weapon1? [wpn1/offset: raquette/offset + (as-pair ((raquette/size/x / 4) - (wpn1/size/x / 2)) 0)]
+                        if not weapon12? [wpn12/offset: raquette/offset + (as-pair (((raquette/size/x * 3) / 4) - (wpn12/size/x / 2)) 0)]
+                        if not weapon13? [wpn13/offset: raquette/offset + (as-pair ((raquette/size/x / 2) - (wpn13/size/x / 2)) 0)]
+                        if not touche1? [weapon1?: true]
+                        if not touche12? [weapon12?: true]
+                        if not touche13? [weapon13?: true]
+                            ]
+                        ]
+                        if tir2? [
+                        poke wpn1/draw 2 cyan poke wpn12/draw 2 cyan poke wpn13/draw 2 cyan
+                        if all [ not double? not triple?] [
+                        if not weapon1? [wpn1/offset: raquette/offset + (as-pair ((raquette/size/x / 2) - (wpn1/size/x / 2)) 0)]
+                        if not touche1? [weapon1?: true]
+                                        ]
+                        if all  [not triple? double?] [
+                        if not weapon1? [wpn1/offset: raquette/offset + (as-pair ((raquette/size/x / 3) - (wpn1/size/x / 2)) 0)]
+                        if not weapon12? [wpn12/offset: raquette/offset + (as-pair (((raquette/size/x * 2) / 3) - (wpn12/size/x / 2)) 0)]
+                        if not touche1? [weapon1?: true]
+                        if not touche12? [weapon12?: true]
+                            ]
+                        if all  [triple? not double?] [
+                        if not weapon1? [wpn1/offset: raquette/offset + (as-pair ((raquette/size/x / 4) - (wpn1/size/x / 2)) 0)]
+                        if not weapon12? [wpn12/offset: raquette/offset + (as-pair (((raquette/size/x * 3) / 4) - (wpn12/size/x / 2)) 0)]
+                        if not weapon13? [wpn13/offset: raquette/offset + (as-pair ((raquette/size/x / 2) - (wpn13/size/x / 2)) 0)]
+                        if not touche1? [weapon1?: true]
+                        if not touche12? [weapon12?: true]
+                        if not touche13? [weapon13?: true]
+                            ]
+                        ]
+                        ]
 
                ]
        ]
@@ -1412,8 +1465,7 @@ if event/type = 'over [move_mouse event/offset]
 do [
 pause_game
 if son? [bass/do  [
-	music:   load %feroness_-_sun.mod   
-	channel: play music  [volume: 1.0]   
+	channel: play music1  [volume: 1.0]   
 ]]
 ]
-][modal no-title]
+][modal ]
